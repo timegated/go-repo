@@ -33,7 +33,11 @@ func loadPage(title string) (*Page, error) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
-	p, _ := loadPage(title)
+	p, err := loadPage(title)
+	if err != nil {
+		http.Redirect(w, r, "/edit/"+title, http.StatusFound) // 302 redirect
+		return
+	}
 	renderTemplate(w, "view", p)
 }
 
@@ -53,9 +57,17 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "edit", p)
 }
 
+func saveHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/save/"):]
+	body := r.FormValue("body") // extracting form value
+	p := &Page{Title: title, Body: []byte(body)} // converting value of body to Page struct body value
+	p.save()
+	http.Redirect(w, r, "/view/"+title, http.StatusFound) // 302 redirect with the required data
+}
+
 func main() {
 	http.HandleFunc("/view/", viewHandler)
 	http.HandleFunc("/edit/", editHandler)
-	// http.HandleFunc("/save/", viewHandler)
+	http.HandleFunc("/save/", saveHandler)
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
