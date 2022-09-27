@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"fmt"
 )
-func index(writer http.ResponseWriter, request *http.Request) {
+func index(w http.ResponseWriter, request *http.Request) {
 	threads, err := data.Threads(); if err == nil {
-		_, err := session(writer, request)
+		_, err := session(w, request)
 		if err != nil {
-			generateHTML(writer, threads, "layout", "public.navbar", "index")
+			generateHTML(w, threads, "layout", "public.navbar", "index")
 			} else {
-				generateHTML(writer, threads, "layout", "private.navbar", "index")
+				generateHTML(w, threads, "layout", "private.navbar", "index")
 			}
 		}
 	}
@@ -23,5 +23,5 @@ func index(writer http.ResponseWriter, request *http.Request) {
 			files = append(files, fmt.Sprintf("templates/%s.html", file))
 		}
 		templates := template.Must(template.ParseFiles(files...))
-		templates.ExecuteTemplate(writer, "layout", data)
+		templates.ExecuteTemplate(w, "layout", data)
 	}
