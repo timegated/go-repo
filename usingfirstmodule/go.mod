@@ -1,3 +1,3 @@
-module github.com/hello
+module hello
 
 go 1.19
