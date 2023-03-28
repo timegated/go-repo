@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/timegated/go-repo/chitchat/data"
+	"chitchat/data"
 	"html/template"
 	"net/http"
 )
